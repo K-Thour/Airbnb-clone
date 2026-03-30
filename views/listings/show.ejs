@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= listing.title %></title>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 1rem;
+      "
+    >
+      <button
+        style="
+          padding: 10px;
+          border-radius: 5px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+        "
+      >
+        <a href="/listings" style="color: white; text-decoration: none">Back</a>
+      </button>
+      <button
+        style="
+          padding: 10px;
+          border-radius: 5px;
+          background-color: #dcd909;
+          color: white;
+          border: none;
+          cursor: pointer;
+        "
+      >
+        <a
+          href="/listings/<%= listing._id %>/edit"
+          style="color: white; text-decoration: none"
+          >Edit</a
+        >
+      </button>
+      <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+        <button type="submit" style="
+          padding: 10px;
+          border-radius: 5px;
+          background-color: #ff385c;
+          color: white;
+          border: none;
+          cursor: pointer;
+        ">Delete</button>
+      </form>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <h1><%= listing.title %></h1>
+      <img
+        style="width: 100%; height: 400px; object-fit: cover"
+        src="<%= listing.image.url %>"
+        alt="<%= listing.title %>"
+      />
+      <p><%= listing.description %></p>
+      <p>Price: <%= listing.price %></p>
+      <p>Location: <%= listing.location %></p>
+      <p>Country: <%= listing.country %></p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Listing</title>
+</head>
+<body>
+    <h3 style="text-align: center">Edit Listing</h3>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem;
+      "
+    >
+      <form
+        action="/listings/<%= listing._id %>?_method=PUT"
+        method="POST"
+        style="display: flex; flex-direction: column; gap: 1rem; width: 50%"
+      >
+        <input
+          type="text"
+          name="title"
+          placeholder="Title"
+          value="<%= listing.title %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <textarea
+          name="description"
+          placeholder="Description"
+          value="<%= listing.description %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        ></textarea>
+        <br />
+        <input
+          type="text"
+          name="image.filename"
+          placeholder="Image Filename"
+          value="<%= listing.image.filename %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <input
+          type="text"
+          name="image.url"
+          placeholder="Image URL"
+          value="<%= listing.image.url %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <input
+          type="number"
+          name="price"
+          placeholder="Price"
+          value="<%= listing.price %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <input
+          type="text"
+          name="location"
+          placeholder="Location"
+          value="<%= listing.location %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <input
+          type="text"
+          name="country"
+          placeholder="Country"
+          value="<%= listing.country %>"
+          style="
+            padding: 0.5rem;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            border-radius: 1rem;
+          "
+        />
+        <br />
+        <div style="display: flex; justify-content: space-between; gap: 1rem">
+        <button
+          type="button"
+          style="
+            padding: 0.5rem;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+          "
+        >
+          <a href="/listings/<%= listing._id %>" style="color: white; text-decoration: none;">Cancel</a>
+        </button>
+        <button
+          type="submit"
+          style="
+            padding: 0.5rem;
+            background-color: #ff385c;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+          "
+        >
+          Edit Listing
+        </button>
+        </div>
+      </form>
+    </div>
+</body>
+</html>
