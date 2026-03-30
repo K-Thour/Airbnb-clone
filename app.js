@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import listing from "./models/listing.js";
 import path from "path";
 import methodOverride from "method-override";
+import ejsMate from "ejs-mate";
 const app=express();
 const url="mongodb+srv://thour:ChSkVdo0hwmwOHIE@inotebook.j4dvz.mongodb.net/airbnb?retryWrites=true&w=majority&appName=airbnb";
 
@@ -21,6 +22,7 @@ app.set("view engine","ejs");
 app.set("views",path.join("views"));
 app.use(urlencoded({extended:true}));
 app.use(methodOverride("_method"));
+app.engine('ejs', ejsMate);
 
 app.get("/listings",async(req,res)=>{
     const listings=await listing.find({});
