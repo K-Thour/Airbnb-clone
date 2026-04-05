@@ -3,7 +3,7 @@
   <div class="container" style="max-width: 600px; margin-top: 2rem; margin-bottom: 2rem;">
     <h3 class="fw-bold mb-4 text-dark">Create a New Listing</h3>
     
-    <form action="/listings" method="POST">
+    <form action="/listings" method="POST" novalidate class="needs-validation">
       <div class="mb-3">
         <label for="title" class="form-label fw-medium">Title</label>
         <input
@@ -11,7 +11,11 @@
           name="title"
           placeholder="Add a catchy title"
           class="form-control"
+          required
         />
+        <div class="invalid-feedback">
+          Please enter a title.
+        </div>
       </div>
       
       <div class="mb-3">
@@ -23,7 +27,10 @@
           rows="4"
           style="resize: vertical;"
         ></textarea>
-      </div>
+        <div class="invalid-feedback">
+          Please enter a description.
+        </div>
+      </div>  
       
       <div class="mb-3">
         <label for="image" class="form-label fw-medium">Image Link</label>
@@ -32,7 +39,11 @@
           name="image"
           placeholder="enter image URL/Link"
           class="form-control"
+          required
         />
+        <div class="invalid-feedback">
+          Please enter an image URL.
+        </div>
       </div>
       
       <div class="row g-3 mb-3">
@@ -43,7 +54,11 @@
             name="price"
             placeholder="1200"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">
+            Please enter a price.
+          </div>
         </div>
         <div class="col-md-6">
           <label for="country" class="form-label fw-medium">Country</label>
@@ -52,7 +67,11 @@
             name="country"
             placeholder="India"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">
+            Please enter a country.
+          </div>
         </div>
       </div>
       
@@ -63,7 +82,11 @@
           name="location"
           placeholder="Jaipur, Rajasthan"
           class="form-control"
+          required
         />
+        <div class="invalid-feedback">
+          Please enter a location.
+        </div>
       </div>
       
       <div class="mt-4">

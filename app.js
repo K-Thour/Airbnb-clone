@@ -5,6 +5,10 @@ import path from "path";
 import methodOverride from "method-override";
 import ejsMate from "ejs-mate";
 import dns from "dns";
+import wrapAsync from "./utils/wrapAsync.js";
+import ExpressError from "./utils/expressError.js";
+import listingSchema from "./validations/listingSchema.js";
+import validateSchema from "./middlewares/validateSchema.js";
 const app = express();
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const url =
@@ -30,47 +34,91 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static("public"));
 
-app.get("/listings", async (req, res) => {
-  const listings = await listing.find({});
-  listings;
-  res.render("listings/index.ejs", { listings });
+app.get(
+  "/listings",
+  wrapAsync(async (req, res) => {
+    const listings = await listing.find({});
+    listings;
+    res.render("listings/index.ejs", { listings });
+  }),
+);
+
+app.get(
+  "/listings/:id/edit",
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const fetchedListing = await listing.findById(id);
+    res.render("listings/edit.ejs", { listing: fetchedListing });
+  }),
+);
+
+app.put(
+  "/listings/:id",
+  validateSchema(listingSchema),
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+      throw new ExpressError("No listing id found", 400);
+    }
+    const listingData = req.body;
+    if (!listingData) {
+      throw new ExpressError("No listing data found", 400);
+    }
+    listingData.image = { url: listingData.image, filename: "listingimage" };
+    await listing.findByIdAndUpdate(id, listingData);
+    res.redirect(`/listings/${id}`);
+  }),
+);
+
+app.delete(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+      throw new ExpressError("No listing id found", 400);
+    }
+    await listing.findByIdAndDelete(id);
+    res.redirect("/listings");
+  }),
+);
+
+app.get(
+  "/listings/new",
+  wrapAsync(async (req, res) => {
+    res.render("listings/new.ejs");
+  }),
+);
+
+app.post(
+  "/listings",
+  validateSchema(listingSchema),
+  wrapAsync(async (req, res) => {
+    if (!req.body.listing) {
+      throw new ExpressError("No listing data found", 400);
+    }
+    const newListing = new listing(req.body.listing);
+    newListing.image = { url: newListing.image, filename: "listingimage" };
+    await newListing.save();
+    res.redirect("/listings");
+  }),
+);
+
+app.get(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const fetchedListing = await listing.findById(id);
+    res.render("listings/show.ejs", { listing: fetchedListing });
+  }),
+);
+
+app.all("/{*path}", (req, res, next) => {
+  next(new ExpressError("Page Not Found", 404));
 });
 
-app.get("/listings/:id/edit", async (req, res) => {
-  const { id } = req.params;
-  const fetchedListing = await listing.findById(id);
-  res.render("listings/edit.ejs", { listing: fetchedListing });
-});
-
-app.put("/listings/:id", async (req, res) => {
-  const { id } = req.params;
-  const listingData = req.body;
-  listingData.image = { url: listingData.image, filename: "listingimage" };
-  await listing.findByIdAndUpdate(id, listingData);
-  res.redirect(`/listings/${id}`);
-});
-
-app.delete("/listings/:id", async (req, res) => {
-  const { id } = req.params;
-  await listing.findByIdAndDelete(id);
-  res.redirect("/listings");
-});
-
-app.get("/listings/new", async (req, res) => {
-  res.render("listings/new.ejs");
-});
-
-app.post("/listings", async (req, res) => {
-  const newListing = new listing(req.body);
-  newListing.image = { url: newListing.image, filename: "listingimage" };
-  await newListing.save();
-  res.redirect("/listings");
-});
-
-app.get("/listings/:id", async (req, res) => {
-  const { id } = req.params;
-  const fetchedListing = await listing.findById(id);
-  res.render("listings/show.ejs", { listing: fetchedListing });
+app.use((err, req, res, next) => {
+  const { message = "Error!", statusCode = 500 } = err;
+  res.status(statusCode).render("error.ejs", { message });
 });
 
 app.listen(3000, () => {
