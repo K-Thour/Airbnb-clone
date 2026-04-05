@@ -1,146 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Listing</title>
-</head>
+<% layout("./layouts/boilerplate") %>
 <body>
-    <h3 style="text-align: center">Edit Listing</h3>
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        margin: 1rem;
-      "
-    >
+    <div class="container" style="max-width: 600px; margin-top: 2rem; margin-bottom: 2rem;">
+    <h3 class="fw-bold mb-4 text-dark">Edit Listing</h3>
       <form
         action="/listings/<%= listing._id %>?_method=PUT"
         method="POST"
-        style="display: flex; flex-direction: column; gap: 1rem; width: 50%"
       >
+      <div class="mb-3">
+        <label for="title" class="form-label fw-medium">Title</label>
         <input
           type="text"
           name="title"
-          placeholder="Title"
+          placeholder="Add a catchy title"
           value="<%= listing.title %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
+          class="form-control"
         />
-        <br />
+      </div>
+      
+      <div class="mb-3">
+        <label for="description" class="form-label fw-medium">Description</label>
         <textarea
           name="description"
           placeholder="Description"
-          value="<%= listing.description %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            height: 100px;
-            border: 1px solid #ccc;
-            border-radius: 1rem;
-          "
-        ></textarea>
-        <br />
+          class="form-control"
+          rows="4"
+          style="resize: vertical;"
+        ><%= listing.description %></textarea>
+      </div>
+      
+      <div class="mb-3">
+        <label for="image" class="form-label fw-medium">Image Link</label>
         <input
           type="text"
-          name="image.filename"
-          placeholder="Image Filename"
-          value="<%= listing.image.filename %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
+          name="image"
+          placeholder="enter image URL/Link"
+          value="<%= listing.image %>"
+          class="form-control"
         />
-        <br />
-        <input
-          type="text"
-          name="image.url"
-          placeholder="Image URL"
-          value="<%= listing.image.url %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
-        />
-        <br />
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value="<%= listing.price %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
-        />
-        <br />
+      </div>
+      
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label for="price" class="form-label fw-medium">Price</label>
+          <input
+            type="number"
+            name="price"
+            placeholder="1200"
+            value="<%= listing.price %>"
+            class="form-control"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="country" class="form-label fw-medium">Country</label>
+          <input
+            type="text"
+            name="country"
+            placeholder="India"
+            value="<%= listing.country %>"
+            class="form-control"
+          />
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="location" class="form-label fw-medium">Location</label>
         <input
           type="text"
           name="location"
-          placeholder="Location"
+          placeholder="Jaipur, Rajasthan"
           value="<%= listing.location %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
+          class="form-control"
         />
-        <br />
-        <input
-          type="text"
-          name="country"
-          placeholder="Country"
-          value="<%= listing.country %>"
-          style="
-            padding: 0.5rem;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            border-radius: 1rem;
-          "
-        />
-        <br />
-        <div style="display: flex; justify-content: space-between; gap: 1rem">
-        <button
-          type="button"
-          style="
-            padding: 0.5rem;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 1rem;
-            cursor: pointer;
-          "
-        >
-          <a href="/listings/<%= listing._id %>" style="color: white; text-decoration: none;">Cancel</a>
-        </button>
+      </div>
+      
+      <div class="mt-4">
         <button
           type="submit"
-          style="
-            padding: 0.5rem;
-            background-color: #ff385c;
-            color: white;
-            border: none;
-            border-radius: 1rem;
-            cursor: pointer;
-          "
+          class="btn text-white fw-medium"
+          style="background-color: #ff5a5f;"
         >
-          Edit Listing
+          Update
         </button>
-        </div>
+      </div>
       </form>
     </div>
 </body>
-</html>
