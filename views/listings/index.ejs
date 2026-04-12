@@ -1,5 +1,4 @@
 <% layout("./layouts/boilerplate") %>
-<body>
     <div style="display: flex; justify-content: space-around; align-items: center;">
         <h3>All Listings</h3>
     </div>
@@ -10,7 +9,7 @@
   <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem;" alt="<%= listing.image.filename %>">
   <div class="card-img-overlay">
   </div>
-  <div class="card text-bg-dark">
+  <div class="card text-bg-dark listing-card">
 </div>
   <div class="card-body">
     <p class="card-text"><b><%= listing.title %></b>  <br>&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
@@ -19,5 +18,3 @@
 </a>
 <% }) %>
     </div>
-</body>
-</html>

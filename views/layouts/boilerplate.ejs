@@ -24,7 +24,10 @@
   </head>
   <body>
     <%- include("../includes/navbar") %>
-    <div class="container"><%- body %></div>
+    <div class="container mb-4">
+      <%- include("../includes/alert") %>
+      <%- body %>
+    </div>
     <%- include("../includes/footer") %>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

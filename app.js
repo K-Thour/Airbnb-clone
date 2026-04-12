@@ -1,14 +1,14 @@
 import express, { urlencoded } from "express";
 import mongoose from "mongoose";
-import listing from "./models/listing.js";
 import path from "path";
 import methodOverride from "method-override";
 import ejsMate from "ejs-mate";
 import dns from "dns";
-import wrapAsync from "./utils/wrapAsync.js";
 import ExpressError from "./utils/expressError.js";
-import listingSchema from "./validations/listingSchema.js";
-import validateSchema from "./middlewares/validateSchema.js";
+import listingRouter from "./routes/listing.router.js";
+import reviewRouter from "./routes/review.router.js";
+import session from "express-session";
+import flash from "connect-flash";
 const app = express();
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const url =
@@ -23,6 +23,17 @@ connectDB()
     process.exit(1);
   });
 
+const sessionOptions = {
+  secret: "mysecret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
 async function connectDB() {
   await mongoose.connect(url);
 }
@@ -34,83 +45,17 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static("public"));
 
-app.get(
-  "/listings",
-  wrapAsync(async (req, res) => {
-    const listings = await listing.find({});
-    listings;
-    res.render("listings/index.ejs", { listings });
-  }),
-);
+app.use(session(sessionOptions));
+app.use(flash());
 
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const fetchedListing = await listing.findById(id);
-    res.render("listings/edit.ejs", { listing: fetchedListing });
-  }),
-);
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
 
-app.put(
-  "/listings/:id",
-  validateSchema(listingSchema),
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-      throw new ExpressError("No listing id found", 400);
-    }
-    const listingData = req.body;
-    if (!listingData) {
-      throw new ExpressError("No listing data found", 400);
-    }
-    listingData.image = { url: listingData.image, filename: "listingimage" };
-    await listing.findByIdAndUpdate(id, listingData);
-    res.redirect(`/listings/${id}`);
-  }),
-);
-
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-      throw new ExpressError("No listing id found", 400);
-    }
-    await listing.findByIdAndDelete(id);
-    res.redirect("/listings");
-  }),
-);
-
-app.get(
-  "/listings/new",
-  wrapAsync(async (req, res) => {
-    res.render("listings/new.ejs");
-  }),
-);
-
-app.post(
-  "/listings",
-  validateSchema(listingSchema),
-  wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new ExpressError("No listing data found", 400);
-    }
-    const newListing = new listing(req.body.listing);
-    newListing.image = { url: newListing.image, filename: "listingimage" };
-    await newListing.save();
-    res.redirect("/listings");
-  }),
-);
-
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const fetchedListing = await listing.findById(id);
-    res.render("listings/show.ejs", { listing: fetchedListing });
-  }),
-);
+app.use("/listings", listingRouter);
+app.use("/listings", reviewRouter);
 
 app.all("/{*path}", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));

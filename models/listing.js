@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import review from "./review.js";
 
 const listingSchema = new Schema({
   title: { type: String, required: true },
@@ -13,7 +14,14 @@ const listingSchema = new Schema({
   price: { type: Number, required: true },
   country: { type: String, required: true },
   location: { type: String, required: true },
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });
 
-const listing = model("listing", listingSchema);
-export default listing;
+listingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await review.deleteMany({ _id: { $in: listing.reviews } });
+  }
+});
+
+const Listing = model("Listing", listingSchema);
+export default Listing;
