@@ -4,11 +4,13 @@ import ExpressError from "../utils/expressError.js";
 import Listing from "../models/listing.js";
 import validateSchema from "../middlewares/validateSchema.js";
 import listingSchema from "../validations/listingSchema.js";
+import isLoggedIn from "../middlewares/isLoggedIn.js";
 
 export const router = express.Router();
 
 router.get(
   "/",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     const listings = await Listing.find({});
     res.render("listings/index.ejs", { listings });
@@ -17,6 +19,7 @@ router.get(
 
 router.get(
   "/:id/edit",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const fetchedListing = await Listing.findById(id);
@@ -26,6 +29,7 @@ router.get(
 
 router.put(
   "/:id",
+  isLoggedIn,
   validateSchema(listingSchema),
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -44,6 +48,7 @@ router.put(
 
 router.delete(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     if (!id) {
@@ -56,6 +61,7 @@ router.delete(
 
 router.get(
   "/new",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     res.render("listings/new.ejs");
   }),
@@ -63,6 +69,7 @@ router.get(
 
 router.post(
   "/",
+  isLoggedIn,
   validateSchema(listingSchema),
   wrapAsync(async (req, res) => {
     if (!req.body.listing) {
@@ -78,6 +85,7 @@ router.post(
 
 router.get(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const fetchedListing = await Listing.findById(id).populate("reviews");
