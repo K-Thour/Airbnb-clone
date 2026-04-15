@@ -9,6 +9,10 @@ import listingRouter from "./routes/listing.router.js";
 import reviewRouter from "./routes/review.router.js";
 import session from "express-session";
 import flash from "connect-flash";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import User from "./models/user.js";
+import userRouter from "./routes/user.router.js";
 const app = express();
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const url =
@@ -47,6 +51,12 @@ app.use(express.static("public"));
 
 app.use(session(sessionOptions));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
@@ -56,6 +66,16 @@ app.use((req, res, next) => {
 
 app.use("/listings", listingRouter);
 app.use("/listings", reviewRouter);
+app.use("/", userRouter);
+
+app.get("/demoUser", async (req, res) => {
+  let fakeUser = new User({
+    email: "karan@gmail.com",
+    username: "karan-user",
+  });
+  let registeredUser = await User.register(fakeUser, "helloworld");
+  res.send(registeredUser);
+});
 
 app.all("/{*path}", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
