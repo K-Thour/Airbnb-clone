@@ -30,6 +30,7 @@
     "passport-local-mongoose": "^9.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "eslint": "^10.2.0",
     "prettier": "^3.8.1",
     "ts-node": "^10.9.2"

@@ -4,14 +4,14 @@ import ExpressError from "../utils/expressError.js";
 import Listing from "../models/listing.js";
 import validateSchema from "../middlewares/validateSchema.js";
 import listingSchema from "../validations/listingSchema.js";
-import isLoggedIn from "../middlewares/isLoggedIn.js";
+import isLoggedIn, { checkOwner } from "../middlewares/isLoggedIn.js";
 
 export const router = express.Router();
 
 router.get(
   "/",
   isLoggedIn,
-  wrapAsync(async (req, res) => {
+  wrapAsync(async (_req, res) => {
     const listings = await Listing.find({});
     res.render("listings/index.ejs", { listings });
   }),
@@ -20,9 +20,10 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  checkOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const fetchedListing = await Listing.findById(id);
+    const fetchedListing = await Listing.findById(id).populate("owner");
     res.render("listings/edit.ejs", { listing: fetchedListing });
   }),
 );
@@ -30,6 +31,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  checkOwner,
   validateSchema(listingSchema),
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -49,6 +51,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
+  checkOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     if (!id) {
@@ -76,7 +79,11 @@ router.post(
       throw new ExpressError("No listing data found", 400);
     }
     const newListing = new Listing(req.body.listing);
-    newListing.image = { url: newListing.image, filename: "listingimage" };
+    newListing.owner = req.user._id;
+    newListing.image = {
+      url: req.body.listing.image,
+      filename: "listingimage",
+    };
     await newListing.save();
     req.flash("success", "Listing created successfully");
     res.redirect("/listings");
@@ -88,7 +95,9 @@ router.get(
   isLoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const fetchedListing = await Listing.findById(id).populate("reviews");
+    const fetchedListing = await Listing.findById(id)
+      .populate({ path: "reviews", populate: { path: "author" } })
+      .populate("owner");
     if (!fetchedListing) {
       req.flash("error", "Listing not found");
       return res.redirect("/listings");

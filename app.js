@@ -78,11 +78,11 @@ app.get("/demoUser", async (req, res) => {
   res.send(registeredUser);
 });
 
-app.all("/{*path}", (req, res, next) => {
+app.all("/{*path}", (_, __, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
 
-app.use((err, req, res, next) => {
+app.use((err, __, res) => {
   const { message = "Error!", statusCode = 500 } = err;
   res.status(statusCode).render("error.ejs", { message });
 });

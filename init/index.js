@@ -20,6 +20,9 @@ async function connectDB() {
 
 const initDB = async () => {
   await listing.deleteMany({});
+  data.data.forEach((listingData) => {
+    listingData.owner = "69dca06bdab0a74cdeb74e92";
+  });
   await listing.insertMany(data.data);
   console.log("data was initialized");
   process.exit(0);

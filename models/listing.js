@@ -15,6 +15,7 @@ const listingSchema = new Schema({
   country: { type: String, required: true },
   location: { type: String, required: true },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {

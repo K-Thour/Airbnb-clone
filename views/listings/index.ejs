@@ -5,11 +5,11 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <% listings.forEach(listing => { %>
         <a href="/listings/<%= listing._id %>" class="col text-decoration-none text-dark">
-    <div class="card">
+    <div class="card rounded-4">
   <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem;" alt="<%= listing.image.filename %>">
   <div class="card-img-overlay">
   </div>
-  <div class="card text-bg-dark listing-card">
+  <div class="card text-bg-dark listing-card rounded-4">
 </div>
   <div class="card-body">
     <p class="card-text"><b><%= listing.title %></b>  <br>&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>

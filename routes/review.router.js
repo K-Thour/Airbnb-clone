@@ -4,7 +4,7 @@ import validateSchema from "../middlewares/validateSchema.js";
 import reviewSchema from "../validations/reviewSchema.js";
 import Listing from "../models/listing.js";
 import Review from "../models/review.js";
-import isLoggedIn from "../middlewares/isLoggedIn.js";
+import isLoggedIn, { isReviewAuthor } from "../middlewares/isLoggedIn.js";
 const router = express.Router();
 
 router.post(
@@ -13,8 +13,11 @@ router.post(
   validateSchema(reviewSchema),
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const fetchedListing = await Listing.findById(id);
+    const fetchedListing = await Listing.findById(id)
+      .populate({ path: "reviews", populate: { path: "author" } })
+      .populate("owner");
     const newReview = new Review(req.body.review);
+    newReview.author = req.user._id;
     fetchedListing.reviews.push(newReview);
     await newReview.save();
     await fetchedListing.save();
@@ -25,6 +28,7 @@ router.post(
 router.delete(
   "/:id/reviews/:reviewId",
   isLoggedIn,
+  isReviewAuthor,
   wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
