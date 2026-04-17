@@ -12,7 +12,7 @@
         <label for="title" class="form-label fw-medium">Title</label>
         <input
           type="text"
-          name="title"
+          name="listing[title]"
           placeholder="Add a catchy title"
           value="<%= listing.title %>"
           class="form-control"
@@ -26,7 +26,7 @@
       <div class="mb-3">
         <label for="description" class="form-label fw-medium">Description</label>
         <textarea
-          name="description"
+          name="listing[description]"
           placeholder="Description"
           class="form-control"
           rows="4"
@@ -38,7 +38,7 @@
         <label for="image" class="form-label fw-medium">Image Link</label>
         <input
           type="text"
-          name="image"
+          name="listing[image]"
           placeholder="enter image URL/Link"
           value="<%= listing.image.url %>"
           class="form-control"
@@ -54,7 +54,7 @@
           <label for="price" class="form-label fw-medium">Price</label>
           <input
             type="number"
-            name="price"
+            name="listing[price]"
             placeholder="1200"
             value="<%= listing.price %>"
             class="form-control"
@@ -68,7 +68,7 @@
           <label for="country" class="form-label fw-medium">Country</label>
           <input
             type="text"
-            name="country"
+            name="listing[country]"
             placeholder="India"
             value="<%= listing.country %>"
             class="form-control"
@@ -84,7 +84,7 @@
         <label for="location" class="form-label fw-medium">Location</label>
         <input
           type="text"
-          name="location"
+          name="listing[location]"
           placeholder="Jaipur, Rajasthan"
           value="<%= listing.location %>"
           class="form-control"

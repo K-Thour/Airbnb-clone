@@ -3,7 +3,7 @@
   <div class="container" style="max-width: 600px; margin-top: 2rem; margin-bottom: 2rem;">
     <h3 class="fw-bold mb-4 text-dark">Create a New Listing</h3>
     
-    <form action="/listings" method="POST" novalidate class="needs-validation">
+    <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="title" class="form-label fw-medium">Title</label>
         <input
@@ -33,16 +33,15 @@
       </div>  
       
       <div class="mb-3">
-        <label for="image" class="form-label fw-medium">Image Link</label>
+        <label for="image" class="form-label fw-medium">Image</label>
         <input
-          type="text"
+          type="file"
           name="listing[image]"
-          placeholder="enter image URL/Link"
           class="form-control"
           required
         />
         <div class="invalid-feedback">
-          Please enter an image URL.
+          Please select an image.
         </div>
       </div>
       
