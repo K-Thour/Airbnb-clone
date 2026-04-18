@@ -39,6 +39,7 @@ router
   .put(
     isLoggedIn,
     checkOwner,
+    upload.single("listing[image]"),
     validateSchema(listingSchema),
     wrapAsync(editListing),
   )

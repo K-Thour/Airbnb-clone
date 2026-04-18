@@ -79,7 +79,7 @@ app.all("/{*path}", (_, __, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
 
-app.use((err, __, res) => {
+app.use((err, _, res) => {
   const { message = "Error!", statusCode = 500 } = err;
   res.status(statusCode).render("error.ejs", { message });
 });

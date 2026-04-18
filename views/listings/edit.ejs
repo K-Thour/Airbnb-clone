@@ -7,6 +7,7 @@
         method="POST"
         novalidate
         class="needs-validation"
+        enctype="multipart/form-data"
       >
       <div class="mb-3">
         <label for="title" class="form-label fw-medium">Title</label>
@@ -31,22 +32,23 @@
           class="form-control"
           rows="4"
           style="resize: vertical;"
+          required
         ><%= listing.description %></textarea>
+      </div>
+
+      <div class="mb-3">
+        Original Listing Image: <br> <br>
+        <img src="<%= listing.image.url %>" alt="<%= listing.image.filename %>" style="width: 100px; height: 100px; border-radius: 1rem;">
       </div>
       
       <div class="mb-3">
-        <label for="image" class="form-label fw-medium">Image Link</label>
+        <label for="image" class="form-label fw-medium">Upload New Image <span class="text-muted fw-normal">(optional)</span></label>
         <input
-          type="text"
+          type="file"
           name="listing[image]"
-          placeholder="enter image URL/Link"
-          value="<%= listing.image.url %>"
           class="form-control"
-          required
         />
-        <div class="invalid-feedback">
-          Please enter an image link.
-        </div>
+        <div class="form-text">Leave blank to keep the existing image.</div>
       </div>
       
       <div class="row g-3 mb-3">

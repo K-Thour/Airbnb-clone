@@ -8,7 +8,11 @@ export const index = async (_req, res) => {
 
 export const renderEditForm = async (req, res) => {
   const { id } = req.params;
-  const fetchedListing = await Listing.findById(id).populate("owner");
+  let fetchedListing = await Listing.findById(id).populate("owner");
+  fetchedListing.image.url = fetchedListing.image.url.replace(
+    "/upload/",
+    "/upload/w_250,h_250,c_fill/",
+  );
   res.render("listings/edit.ejs", { listing: fetchedListing });
 };
 
@@ -21,8 +25,20 @@ export const editListing = async (req, res) => {
   if (!listingData) {
     throw new ExpressError("No listing data found", 400);
   }
-  listingData.image = { url: listingData.image, filename: "listingimage" };
-  await Listing.findByIdAndUpdate(id, listingData);
+  // Remove the image string field from body (handled separately)
+  delete listingData.image;
+  const updatedListing = await Listing.findByIdAndUpdate(id, listingData, {
+    new: true,
+  });
+  // If a new file was uploaded, update the image
+  if (req.file) {
+    updatedListing.image = {
+      url: req.file.path,
+      filename: req.file.filename || req.file.originalname,
+    };
+    await updatedListing.save();
+  }
+  req.flash("success", "Listing updated successfully");
   res.redirect(`/listings/${id}`);
 };
 
@@ -45,10 +61,13 @@ export const createNewListing = async (req, res) => {
   }
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
-  newListing.image = {
-    url: req.file.secure_url,
-    filename: req.file.originalname,
-  };
+  // If an image was uploaded, use it; otherwise the model default is used
+  if (req.file) {
+    newListing.image = {
+      url: req.file.path,
+      filename: req.file.filename || req.file.originalname,
+    };
+  }
   await newListing.save();
   req.flash("success", "Listing created successfully");
   res.redirect("/listings");

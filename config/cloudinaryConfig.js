@@ -1,4 +1,4 @@
-import cloudinary from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import envConfigs from "./envConfigs.js";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 

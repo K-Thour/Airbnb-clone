@@ -7,7 +7,7 @@ const validateSchema = (schema) => {
       const errorMessage = error.details
         .map((detail) => detail.message)
         .join(", ");
-      throw new ExpressError(errorMessage, 400);
+      return next(new ExpressError(errorMessage, 400));
     }
     next();
   };
