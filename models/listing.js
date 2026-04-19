@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import review from "./review.js";
+import { categories } from "../public/js/filters.js";
 
 const listingSchema = new Schema({
   title: { type: String, required: true },
@@ -14,6 +15,7 @@ const listingSchema = new Schema({
   price: { type: Number, required: true },
   country: { type: String, required: true },
   location: { type: String, required: true },
+  category: { type: String, enum: categories, required: true },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });

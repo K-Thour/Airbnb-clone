@@ -1,18 +1,23 @@
 <% layout("./layouts/boilerplate") %>
-    <div style="display: flex; justify-content: space-around; align-items: center;">
-        <h3>All Listings</h3>
+    <div id="filters" class="mb-3 mt-3">
+      <div class="tax-toggle">
+        <div class="form-check-reverse form-switch">
+          <input type="checkbox" class="form-check-input" role="switch" id="flexSwitchCheckDefault">
+          <label class="form-check-label" for="flexSwitchCheckDefault">Tax included</label>
+        </div>
+      </div>
     </div>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <% listings.forEach(listing => { %>
-        <a href="/listings/<%= listing._id %>" class="col text-decoration-none text-dark">
-    <div class="card rounded-4">
+        <a href="/listings/<%= listing._id %>" class="col text-decoration-none text-dark listing-item" data-category="<%= listing.category %>">
+    <div class="card rounded-4" data-category="<%= listing.category %>">
   <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem;" alt="<%= listing.image.filename %>">
   <div class="card-img-overlay">
   </div>
   <div class="card text-bg-dark listing-card rounded-4">
 </div>
   <div class="card-body">
-    <p class="card-text"><b><%= listing.title %></b>  <br>&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</p>
+    <p class="card-text"><b><%= listing.title %></b>  <br>&#8377; <%= listing.price.toLocaleString("en-IN") %> / night <i class="tax-info">&nbsp;&nbsp;Tax included : 18%</i></p>
   </div>
 </div>
 </a>

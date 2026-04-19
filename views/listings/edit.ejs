@@ -35,6 +35,18 @@
           required
         ><%= listing.description %></textarea>
       </div>
+      <div class="mb-3">
+        <label for="category" class="form-label fw-medium">Category</label>
+        <select name="listing[category]" class="form-select" required>
+          <option value="">Select a category</option>
+          <% categories.forEach(category => { %>
+            <option value="<%= category %>" <%= listing.category === category ? 'selected' : '' %>><%= category %></option>
+          <% }) %>
+        </select>
+        <div class="invalid-feedback">
+          Please select a category.
+        </div>
+      </div>
 
       <div class="mb-3">
         Original Listing Image: <br> <br>

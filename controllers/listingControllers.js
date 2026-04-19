@@ -1,8 +1,30 @@
 import Listing from "../models/listing.js";
 import ExpressError from "../utils/expressError.js";
+import { categories } from "../public/js/filters.js";
 
 export const index = async (_req, res) => {
   const listings = await Listing.find({});
+  res.render("listings/index.ejs", { listings });
+};
+
+export const searchListings = async (req, res) => {
+  const { q } = req.query;
+  if (!q || q.trim() === "") {
+    req.flash("error", "Please enter a search term");
+    return res.redirect("/listings");
+  }
+  const searchRegex = new RegExp(q.trim(), "i");
+  const listings = await Listing.find({
+    $or: [
+      { title: searchRegex },
+      { location: searchRegex },
+      { country: searchRegex },
+    ],
+  });
+  if (listings.length === 0) {
+    req.flash("error", `No listings found for "${q}"`);
+    return res.redirect("/listings");
+  }
   res.render("listings/index.ejs", { listings });
 };
 
@@ -13,7 +35,7 @@ export const renderEditForm = async (req, res) => {
     "/upload/",
     "/upload/w_250,h_250,c_fill/",
   );
-  res.render("listings/edit.ejs", { listing: fetchedListing });
+  res.render("listings/edit.ejs", { listing: fetchedListing, categories });
 };
 
 export const editListing = async (req, res) => {
@@ -52,7 +74,7 @@ export const deleteListing = async (req, res) => {
 };
 
 export const renderNewForm = async (_req, res) => {
-  res.render("listings/new.ejs");
+  res.render("listings/new.ejs", { categories });
 };
 
 export const createNewListing = async (req, res) => {

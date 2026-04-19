@@ -13,7 +13,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import User from "./models/user.js";
 import userRouter from "./routes/user.router.js";
-
+import MongoStore from "connect-mongo";
 import envConfigs from "./config/envConfigs.js";
 
 const app = express();
@@ -24,8 +24,25 @@ if (!url) {
   process.exit(1);
 }
 
+async function connectDB() {
+  await mongoose.connect(url);
+}
+
+const store = new MongoStore({
+  mongoUrl: url,
+  crypto: {
+    secret: envConfigs.SESSION_SECRET,
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", (err) => {
+  console.log("Session store error", err);
+});
+
 const sessionOptions = {
-  secret: "mysecret",
+  store,
+  secret: envConfigs.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -34,10 +51,6 @@ const sessionOptions = {
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
   },
 };
-
-async function connectDB() {
-  await mongoose.connect(url);
-}
 
 app.set("view engine", "ejs");
 app.set("views", path.join("views"));

@@ -11,6 +11,7 @@ import {
   index,
   renderEditForm,
   renderNewForm,
+  searchListings,
 } from "../controllers/listingControllers.js";
 import { storage } from "../config/cloudinaryConfig.js";
 import multer from "multer";
@@ -28,6 +29,8 @@ router
     validateSchema(listingSchema),
     wrapAsync(createNewListing),
   );
+
+router.get("/search", isLoggedIn, wrapAsync(searchListings));
 
 router.get("/new", isLoggedIn, wrapAsync(renderNewForm));
 

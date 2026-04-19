@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { categories } from "../public/js/filters.js";
 
 const listingSchema = Joi.object({
   listing: Joi.object({
@@ -8,6 +9,9 @@ const listingSchema = Joi.object({
     location: Joi.string().required(),
     country: Joi.string().required(),
     description: Joi.string().required(),
+    category: Joi.string()
+      .valid(...categories)
+      .required(),
   }).required(),
 });
 
