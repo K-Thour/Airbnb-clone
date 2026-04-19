@@ -88,7 +88,7 @@ app.get("/demoUser", async (req, res) => {
   res.send(registeredUser);
 });
 
-app.all("/{*path}", (_, __, next) => {
+app.use((_, __, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
 
